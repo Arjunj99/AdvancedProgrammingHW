@@ -7,11 +7,16 @@ public class SoccerPlayerController : MonoBehaviour
     public Rigidbody rb;
     public float speed;
     public ForceMode forceMode;
+    private Vector3 startPosition;
     // Start is called before the first frame update
     void Awake()
     {
         if (Service.PlayerController == null) { Service.PlayerController = this; }
         else { Destroy(this.gameObject); }
+        startPosition = transform.position;
+
+        Service.EventManager.Register<ScoreEvent>(ReceiveScoreEvent);
+        Service.EventManager.Register<EndGameEvent>(ReceiveEndGameEvent);
     }
 
     // Update is called once per frame
@@ -33,5 +38,28 @@ public class SoccerPlayerController : MonoBehaviour
         {
             rb.AddForce(-transform.forward * speed, forceMode);
         }
+    }
+
+    public void Unregister()
+    {
+        Service.EventManager.Unregister<ScoreEvent>(ReceiveScoreEvent);
+        Service.EventManager.Unregister<EndGameEvent>(ReceiveEndGameEvent);
+    }
+
+    public void ResetPosition()
+    {
+        transform.position = startPosition;
+    }
+
+    public void ReceiveScoreEvent(AGPEvent e)
+    {
+        ScoreEvent scoreEvent = (ScoreEvent) e;
+        ResetPosition();
+    }
+
+    public void ReceiveEndGameEvent(AGPEvent e)
+    {
+        EndGameEvent scoreEvent = (EndGameEvent) e;
+        ResetPosition();
     }
 }

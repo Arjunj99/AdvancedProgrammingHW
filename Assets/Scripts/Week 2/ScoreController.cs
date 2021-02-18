@@ -1,19 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ScoreController : MonoBehaviour
 {
     public FiniteStateMachine<ScoreController> GameState;
-    public TextMesh TitleText;
-    public TextMesh GameOverText;
-    public TextMesh ScoreText;
+    public TMP_Text TitleText;
+    public TMP_Text GameOverText;
+    public TMP_Text ScoreText;
     public int score;
 
     // Start is called before the first frame update
     void Start()
     {
         GameState = new FiniteStateMachine<ScoreController>(this);
+        GameState.TransitionTo<StartGame>();
     }
 
     // Update is called once per frame
@@ -48,7 +50,7 @@ public class StartGame : FiniteStateMachine<ScoreController>.State
 public class MidGame : FiniteStateMachine<ScoreController>.State
 {
     private const int BASESCORE = 0;
-    private const float MAXTIME = 30f;
+    private const float MAXTIME = 5f;
     public float time;
 
     public override void OnEnter()
@@ -57,18 +59,28 @@ public class MidGame : FiniteStateMachine<ScoreController>.State
         time = MAXTIME;
         Service.AIManager.CreationLeft();
         Service.AIManager.CreationRight();
+        Service.EventManager.Register<ScoreEvent>(ReceiveScoreEvent);
     }
 
     public override void OnExit()
     {
         Service.AIManager.DestroyAll();
         Service.EventManager.Fire(new EndGameEvent());
+        Service.EventManager.Unregister<ScoreEvent>(ReceiveScoreEvent);
     }
 
     public override void Update()
     {
         time -= Time.deltaTime;
+        Debug.Log(time);
         if (time < 0) { TransitionTo<EndGame>(); }
+    }
+
+    public void ReceiveScoreEvent(AGPEvent e)
+    {
+        ScoreEvent scoreEvent = (ScoreEvent) e;
+        if (scoreEvent.team == WhoScored.AIScored) { Context.score--; }
+        else { Context.score++; }
     }
 }
 
@@ -77,7 +89,7 @@ public class EndGame : FiniteStateMachine<ScoreController>.State
     public override void OnEnter()
     {
         Context.GameOverText.color = Color.white;
-        Context.ScoreText.text = $"Score: {Service.ScoreController.score} points";
+        Context.ScoreText.text = $"Score: {Context.score} points";
         Context.ScoreText.color = Color.white;
     }
 
@@ -119,12 +131,10 @@ public enum WhoScored
 
 public class ScoreEvent : AGPEvent
 {
-    public GameObject player;
     public WhoScored team;
     
-    public ScoreEvent(GameObject player, WhoScored team)
+    public ScoreEvent(WhoScored team)
     { 
-        this.player = player;
         this.team = team;
     }
 }
