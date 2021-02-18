@@ -33,10 +33,15 @@ public class StartGame : FiniteStateMachine<ScoreController>.State
     public override void OnExit()
     {
         Context.TitleText.color = Color.green;
+        Service.EventManager.Fire(new StartGameEvent());
     }
 
     public override void Update()
     {
+        if (Input.anyKey)
+        {
+            TransitionTo<MidGame>();
+        }
     }
 }
 
@@ -57,12 +62,13 @@ public class MidGame : FiniteStateMachine<ScoreController>.State
     public override void OnExit()
     {
         Service.AIManager.DestroyAll();
+        Service.EventManager.Fire(new EndGameEvent());
     }
 
     public override void Update()
     {
         time -= Time.deltaTime;
-        if (time < 0) { }
+        if (time < 0) { TransitionTo<EndGame>(); }
     }
 }
 
@@ -79,10 +85,15 @@ public class EndGame : FiniteStateMachine<ScoreController>.State
     {
         Context.GameOverText.color = Color.green;
         Context.ScoreText.color = Color.green;
+        Service.EventManager.Fire(new RestartEvent());
     }
 
     public override void Update()
     {
+        if (Input.anyKey)
+        {
+            TransitionTo<StartGame>();
+        }
     }
 }
 

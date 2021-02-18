@@ -8,4 +8,5 @@ public static class Service
     public static GameManager GameManager;
     public static SoccerPlayerController PlayerController;
     public static ScoreController ScoreController;
+    public static EventManager EventManager = new EventManager();
 }
