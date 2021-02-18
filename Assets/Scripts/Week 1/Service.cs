@@ -7,4 +7,5 @@ public static class Service
     public static AILifeCycle AIManager;
     public static GameManager GameManager;
     public static SoccerPlayerController PlayerController;
+    public static ScoreController ScoreController;
 }

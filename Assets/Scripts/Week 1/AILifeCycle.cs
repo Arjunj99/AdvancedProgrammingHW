@@ -92,6 +92,15 @@ public class AILifeCycle
         AllAI.Remove(UUID);
     }
 
+    public void DestroyAll()
+    {
+        foreach (KeyValuePair<string, GameObject> ai in AllAI)
+        {
+            GameObject.Destroy(ai.Value);
+            AllAI.Remove(ai.Key);
+        }
+    }
+
     /// <summary>
     /// Generates Unique Random ID
     /// </summary>
