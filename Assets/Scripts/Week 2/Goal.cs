@@ -20,7 +20,7 @@ public class Goal : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Böll")
+        if (other.tag == "Böll") // My fun for the week
         {
             Service.EventManager.Fire(new ScoreEvent(whoScored));
         }

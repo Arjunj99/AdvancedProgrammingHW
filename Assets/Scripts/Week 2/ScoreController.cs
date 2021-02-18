@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <summary>
+/// Score Controller handles the Gamestates of the Scene
+/// </summary>
 public class ScoreController : MonoBehaviour
 {
-    public FiniteStateMachine<ScoreController> GameState;
-    public TMP_Text TitleText;
-    public TMP_Text GameOverText;
-    public TMP_Text ScoreText;
+    public FiniteStateMachine<ScoreController> GameState; // What state the Game is in
+    public TMP_Text TitleText; // "Start Game" Text Mesh
+    public TMP_Text GameOverText; // "Game Over" Text Mesh
+    public TMP_Text ScoreText; // "Score: __ Points" Text Mesh
     public int score;
 
     // Start is called before the first frame update
@@ -25,6 +28,9 @@ public class ScoreController : MonoBehaviour
     }
 }
 
+/// <summary>
+/// State of the Game at Main Menu
+/// </summary>
 public class StartGame : FiniteStateMachine<ScoreController>.State
 {
     public override void OnEnter()
@@ -47,6 +53,9 @@ public class StartGame : FiniteStateMachine<ScoreController>.State
     }
 }
 
+/// <summary>
+/// State of the Game during Gameplay
+/// </summary>
 public class MidGame : FiniteStateMachine<ScoreController>.State
 {
     private const int BASESCORE = 0;
@@ -84,6 +93,9 @@ public class MidGame : FiniteStateMachine<ScoreController>.State
     }
 }
 
+/// <summary>
+/// State of the Game during Score Screen
+/// </summary>
 public class EndGame : FiniteStateMachine<ScoreController>.State
 {
     public override void OnEnter()
