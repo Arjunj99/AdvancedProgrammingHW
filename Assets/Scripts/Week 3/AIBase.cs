@@ -3,29 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
 
-public class AIBase : MonoBehaviour
+public abstract class AIBase : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float AISpeed;
+    protected Tree<AIBase> behaviorTree;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public abstract bool CreateTree();
 }
 
-public class RunAtBall : Node<AIBase>
+public abstract class RunBase : Node<AIBase>
 {
+    public abstract void Run();
+
     public override bool Update(AIBase context)
     {
-        foreach (KeyValuePair<string, GameObject> ai in AllAI)
-        {
-            ai.Value.GetComponent<Rigidbody>().AddForce(speed * ai.Value.transform.forward, forceMode);
-            ai.Value.transform.LookAt(new Vector3(lastPosition.x, 0.5f, lastPosition.z));
-        }
+        Run();
+        return true;
     }
 }
