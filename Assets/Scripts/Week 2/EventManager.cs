@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class EventManager
 {
-
     private Dictionary<Type, AGPEvent.Handler> _registeredHandlers = new Dictionary<Type, AGPEvent.Handler>();
 
     public void Register<T>(AGPEvent.Handler handler) where T : AGPEvent

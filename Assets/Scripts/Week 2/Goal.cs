@@ -18,6 +18,16 @@ public class Goal : MonoBehaviour
         
     }
 
+
+    public void OnHeal()
+    {
+        Service.EventManager.Fire(new PlayerGainsHealth(4));
+    }
+
+
+
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Böll") // My fun for the week

@@ -62,4 +62,10 @@ public class SoccerPlayerController : MonoBehaviour
         EndGameEvent scoreEvent = (EndGameEvent) e;
         ResetPosition();
     }
+
+    public void RecievePlayerGainedHealthEvent(AGPEvent e)
+    {
+        PlayerGainsHealth gainHealthEvent = (PlayerGainsHealth)e;
+        // card.health += gainHealthEvent.healthRegained;
+    }
 }

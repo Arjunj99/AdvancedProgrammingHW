@@ -151,4 +151,14 @@ public class ScoreEvent : AGPEvent
     }
 }
 
+public class PlayerGainsHealth : AGPEvent
+{
+    public int healthRegained;
+    
+    public PlayerGainsHealth(int healthRegained)
+    {
+        this.healthRegained = healthRegained;
+    }
+}
+
 

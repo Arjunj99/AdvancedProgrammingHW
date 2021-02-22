@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
 
         Service.EventManager.Register<ScoreEvent>(ReceiveScoreEvent);
         Service.EventManager.Register<EndGameEvent>(ReceiveEndGameEvent);
+        Service.EventManager.Register<PlayerGainsHealth>(RecievePlayerGainedHealthEvent);
 
         startPosition = ball.transform.position;
     }
@@ -46,7 +47,7 @@ public class GameManager : MonoBehaviour
     {
         Service.EventManager.Unregister<ScoreEvent>(ReceiveScoreEvent);
         Service.EventManager.Unregister<EndGameEvent>(ReceiveEndGameEvent);
-
+        Service.EventManager.Unregister<PlayerGainsHealth>(RecievePlayerGainedHealthEvent);
     }
 
     public void ResetPosition()
@@ -64,5 +65,11 @@ public class GameManager : MonoBehaviour
     {
         EndGameEvent endEvent = (EndGameEvent) e;
         ResetPosition();
+    }
+
+    public void RecievePlayerGainedHealthEvent(AGPEvent e)
+    {
+        PlayerGainsHealth gainHealthEvent = (PlayerGainsHealth) e;
+        // card.attack += gainHealthEvent.healthRegained;
     }
 }
