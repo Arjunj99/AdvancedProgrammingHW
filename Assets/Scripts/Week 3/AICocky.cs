@@ -28,7 +28,8 @@ public class AICocky : AIBase
                     new YellInsults(),
                     new Gesture()
                 ),
-                new CockyRun()
+                new CockyRun(),
+                new DanceOnGoal()
             )
         );
         return true;
@@ -40,6 +41,14 @@ public class CockyRun : RunBase
     public override void Run()
     {
         // Implement AIBaseRun
+    }
+}
+
+public class DanceOnGoal : GoalBase
+{
+    public override void GoalAction()
+    {
+        throw new System.NotImplementedException();
     }
 }
 

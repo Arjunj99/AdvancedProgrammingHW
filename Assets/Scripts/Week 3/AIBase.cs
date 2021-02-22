@@ -21,3 +21,14 @@ public abstract class RunBase : Node<AIBase>
         return true;
     }
 }
+
+public abstract class GoalBase : Node<AIBase>
+{
+    public abstract void GoalAction();
+
+    public override bool Update(AIBase context)
+    {
+        GoalAction();
+        return true;
+    }
+}
