@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
 
-public class AICocky : AIBase
+public class AIScared : AIBase
 {
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -19,23 +19,23 @@ public class AICocky : AIBase
 
     public override bool CreateTree()
     {
-        behaviorTree = new Tree<AICocky>
+        behaviorTree = new Tree<AIScared>
         (
-            new Selector<AICocky>
+            new Selector<AIScared>
             (
-                new Sequence<AICocky>
+                new Sequence<AIScared>
                 (
-                    new YellInsults(),
-                    new Gesture()
+                    new Apologize(),
+                    new Cower()
                 ),
-                new CockyRun()
+                new ScaredRun()
             )
         );
         return true;
     }
 }
 
-public class CockyRun : RunBase
+public class ScaredRun : RunBase
 {
     public override void Run()
     {
@@ -43,20 +43,21 @@ public class CockyRun : RunBase
     }
 }
 
-public class YellInsults : Node<AICocky>
+public class Apologize : Node<AIScared>
 {
-    public override bool Update(AICocky context)
+    public override bool Update(AIScared context)
     {
         // Implement Yell Functionality
-        return true;
+        throw new System.NotImplementedException();
     }
 }
 
-public class Gesture : Node<AICocky>
+public class Cower : Node<AIScared>
 {
-    public override bool Update(AICocky context)
+    public override bool Update(AIScared context)
     {
         // Implement Gesture Functionality
-        return true;
+        throw new System.NotImplementedException();
     }
 }
+
