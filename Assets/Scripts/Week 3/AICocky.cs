@@ -5,10 +5,9 @@ using BehaviorTree;
 
 public class AICocky : AIBase
 {
-    // Start is called before the first frame update
-    void Start()
+    protected void Awake()
     {
-        
+        CreateTree();
     }
 
     // Update is called once per frame
@@ -40,7 +39,7 @@ public class CockyRun : RunBase
 {
     public override void Run()
     {
-        // Implement AIBaseRun
+        throw new System.NotImplementedException();
     }
 }
 
@@ -56,8 +55,7 @@ public class YellInsults : Node<AICocky>
 {
     public override bool Update(AICocky context)
     {
-        // Implement Yell Functionality
-        return true;
+        throw new System.NotImplementedException();
     }
 }
 
@@ -65,7 +63,6 @@ public class Gesture : Node<AICocky>
 {
     public override bool Update(AICocky context)
     {
-        // Implement Gesture Functionality
-        return true;
+        throw new System.NotImplementedException();
     }
 }

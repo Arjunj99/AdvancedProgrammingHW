@@ -5,10 +5,9 @@ using BehaviorTree;
 
 public class AIScared : AIBase
 {
-    // Start is called before the first frame update
-    void Start()
+    protected void Awake()
     {
-
+        CreateTree();
     }
 
     // Update is called once per frame
@@ -28,7 +27,8 @@ public class AIScared : AIBase
                     new Apologize(),
                     new Cower()
                 ),
-                new ScaredRun()
+                new ScaredRun(),
+                new ApologizeOnGoal()
             )
         );
         return true;
@@ -39,15 +39,14 @@ public class ScaredRun : RunBase
 {
     public override void Run()
     {
-        // Implement AIBaseRun
+        throw new System.NotImplementedException();
     }
 }
 
-public class Apologize : Node<AIScared>
+public class ApologizeOnGoal : GoalBase
 {
-    public override bool Update(AIScared context)
+    public override void GoalAction()
     {
-        // Implement Yell Functionality
         throw new System.NotImplementedException();
     }
 }
@@ -56,8 +55,14 @@ public class Cower : Node<AIScared>
 {
     public override bool Update(AIScared context)
     {
-        // Implement Gesture Functionality
         throw new System.NotImplementedException();
     }
 }
 
+public class Apologize : Node<AIScared>
+{
+    public override bool Update(AIScared context)
+    {
+        throw new System.NotImplementedException();
+    }
+}
