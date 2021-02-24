@@ -18,19 +18,19 @@ public class AIScared : AIBase
 
     public override bool CreateTree()
     {
-        behaviorTree = new Tree<AIScared>
-        (
-            new Selector<AIScared>
-            (
-                new Sequence<AIScared>
-                (
-                    new Apologize(),
-                    new Cower()
-                ),
-                new ScaredRun(),
-                new ApologizeOnGoal()
-            )
-        );
+        //behaviorTree = new Tree<AIScared>
+        //(
+        //    new Selector<AIScared>
+        //    (
+        //        new Sequence<AIScared>
+        //        (
+        //            new Apologize(),
+        //            new Cower()
+        //        ),
+        //        new ScaredRun(),
+        //        new ApologizeOnGoal()
+        //    )
+        //);
         return true;
     }
 }

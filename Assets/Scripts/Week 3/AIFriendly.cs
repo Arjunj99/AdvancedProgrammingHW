@@ -18,19 +18,19 @@ public class AIFriendly : AIBase
 
     public override bool CreateTree()
     {
-        behaviorTree = new Tree<AIFriendly>
-        (
-            new Selector<AIFriendly>
-            (
-                new Sequence<AIFriendly>
-                (
-                    new Greet(),
-                    new CheerOn()
-                ),
-                new FriendlyRun(),
-                new CheerOnGoal()
-            )
-        );
+        //behaviorTree = new Tree<AIFriendly>
+        //(
+        //    new Selector<AIFriendly>
+        //    (
+        //        new Sequence<AIFriendly>
+        //        (
+        //            new Greet(),
+        //            new CheerOn()
+        //        ),
+        //        new FriendlyRun(),
+        //        new CheerOnGoal()
+        //    )
+        //);
         return true;
     }
 }

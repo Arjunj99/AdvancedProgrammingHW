@@ -18,19 +18,19 @@ public class AIReferee : AIBase
 
     public override bool CreateTree()
     {
-        behaviorTree = new Tree<AIReferee>
-        (
-            new Selector<AIReferee>
-            (
-                new Sequence<AIReferee>
-                (
-                    new RedCard(),
-                    new RegulationCheck()
-                ),
-                new RefereeRun(),
-                new AwardGoal()
-            )
-        );
+        //behaviorTree = new Tree<AIReferee>
+        //(
+        //    new Selector<AIReferee>
+        //    (
+        //        new Sequence<AIReferee>
+        //        (
+        //            new RedCard(),
+        //            new RegulationCheck()
+        //        ),
+        //        new RefereeRun(),
+        //        new AwardGoal()
+        //    )
+        //);
         return true;
     }
 }

@@ -18,19 +18,19 @@ public class AICocky : AIBase
 
     public override bool CreateTree()
     {
-        behaviorTree = new Tree<AICocky>
-        (
-            new Selector<AICocky>
-            (
-                new Sequence<AICocky>
-                (
-                    new YellInsults(),
-                    new Gesture()
-                ),
-                new CockyRun(),
-                new DanceOnGoal()
-            )
-        );
+        //behaviorTree = new Tree<AICocky>
+        //(
+        //    new Selector<AICocky>
+        //    (
+        //        new Sequence<AICocky>
+        //        (
+        //            new YellInsults(),
+        //            new Gesture()
+        //        ),
+        //        new CockyRun(),
+        //        new DanceOnGoal()
+        //    )
+        //);
         return true;
     }
 }
