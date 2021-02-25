@@ -55,32 +55,18 @@ public class ChessSolver : MonoBehaviour
         string trueFilePath = Application.streamingAssetsPath + "\\" + filePath;
 
         string text = File.ReadAllText(trueFilePath);
-        Debug.Log(text);
-
-        //foreach
-
-        //char[] separators = { '\n' };
-        //string[] strValues = text.Split(separators);
-
-        //List<int> intValues = new List<int>();
-
-        //foreach (string str in strValues)
-        //{
-        //    strings.Add(str);
-        //    int val = 0;
-        //    if (int.TryParse(str, out val))
-        //        intValues.Add(val);
-        //}
+        PopulateBoard(text);
     }
 
-    private bool PopulateBoard(string boardInfo)
+    private void PopulateBoard(string boardInfo)
     {
         char[] boardInfoChar = boardInfo.ToCharArray();
         for (int i = 0; i < BOARDLENGTH; i++)
         {
             for (int j = 0; j < BOARDLENGTH; j++)
             {
-                board[i,j] = boardInfoChar[i];
+                board[i,j] = CharToChessPiece(boardInfoChar[i + j]);
+                Debug.Log(board[i, j]);
             }
         }
     }
@@ -90,12 +76,43 @@ public class ChessSolver : MonoBehaviour
         switch (chessChar)
         {
             case ('p'):
-                return ChessPiece.pawn;
-            case ('')
+                return new ChessPiece(ChessPieceType.pawn, ChessPieceTeam.white);
+            case ('P'):
+                return new ChessPiece(ChessPieceType.pawn, ChessPieceTeam.black);
+            case ('b'):
+                return new ChessPiece(ChessPieceType.bishop, ChessPieceTeam.white);
+            case ('B'):
+                return new ChessPiece(ChessPieceType.bishop, ChessPieceTeam.black);
+            case ('n'):
+                return new ChessPiece(ChessPieceType.knight, ChessPieceTeam.white);
+            case ('N'):
+                return new ChessPiece(ChessPieceType.knight, ChessPieceTeam.black);
+            case ('r'):
+                return new ChessPiece(ChessPieceType.rook, ChessPieceTeam.white);
+            case ('R'):
+                return new ChessPiece(ChessPieceType.rook, ChessPieceTeam.black);
+            case ('q'):
+                return new ChessPiece(ChessPieceType.queen, ChessPieceTeam.white);
+            case ('Q'):
+                return new ChessPiece(ChessPieceType.queen, ChessPieceTeam.black);
+            case ('k'):
+                return new ChessPiece(ChessPieceType.king, ChessPieceTeam.white);
+            case ('K'):
+                return new ChessPiece(ChessPieceType.king, ChessPieceTeam.black);
+            default:
+                return new ChessPiece(ChessPieceType.none, ChessPieceTeam.none);
         }
     }
 
-    public enum ChessPiece {
+    public Vector2Int[] GetAllNextMoves(int length, int width)
+    {
+        ChessPiece chessPiece = board[length, width];
+        List<Vector2Int> nextMoveArray = new List<Vector2Int>();
+        if (chessPiece.chessPieceType == ChessPieceType.pawn && chespi)
+    }
+
+    public enum ChessPieceType
+    {
         pawn,
         bishop,
         knight,
@@ -103,5 +120,30 @@ public class ChessSolver : MonoBehaviour
         queen,
         king,
         none
+    }
+
+    public enum ChessPieceTeam
+    {
+        black,
+        white,
+        none
+    }
+}
+
+public struct ChessPiece
+{
+    public ChessSolver.ChessPieceType chessPieceType;
+    public ChessSolver.ChessPieceTeam team;
+
+    public ChessPiece(ChessSolver.ChessPieceType chessPieceType, ChessSolver.ChessPieceTeam team)
+    {
+        this.chessPieceType = chessPieceType;
+        this.team = team;
+    }
+
+    public override string ToString()
+    {
+        if (chessPieceType == ChessSolver.ChessPieceType.none || team == ChessSolver.ChessPieceTeam.none) { return "Empty space"; }
+        return $"{team} {chessPieceType}";
     }
 }
