@@ -3138,6 +3138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4b829ab5f85d6a479f85678401a5e19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chessFileName: chess_checkBlack.txt
+  debug: 
 --- !u!4 &1610998471
 Transform:
   m_ObjectHideFlags: 0

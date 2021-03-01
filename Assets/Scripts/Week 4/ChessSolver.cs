@@ -12,22 +12,15 @@ public class ChessSolver : MonoBehaviour
     public readonly Vector2Int[] KINGTHREAT = { new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1), new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, -1) };
 
 
-    //public readonly Vector2Int[] PAWNTHREAT = { new Vector2Int(1, 1), new Vector2Int(1, -1) };
-
-    //public readonly Vector2Int[] PAWNTHREAT = { new Vector2Int(1, 1), new Vector2Int(1, -1) };
-
-    //public readonly Vector2Int[] PAWNTHREAT = { new Vector2Int(1, 1), new Vector2Int(1, -1) };
-
-    //public readonly Vector2Int[] PAWNTHREAT = { new Vector2Int(1, 1), new Vector2Int(1, -1) };
-
-
     public ChessPiece[,] board = new ChessPiece[BOARDLENGTH, BOARDLENGTH];
     public ChessThreat[,] threatBoard = new ChessThreat[BOARDLENGTH, BOARDLENGTH];
+    public string chessFileName;
+    public char[] debug ;
 
     // Start is called before the first frame update
     void Start()
     {
-        ParseFile("chess_mateInOne.txt");
+        ParseFile(chessFileName);
     }
 
     // Update is called once per frame
@@ -49,7 +42,7 @@ public class ChessSolver : MonoBehaviour
                 // the file is reached.
                 while ((line = sr.ReadLine()) != null)
                 {
-                    Debug.Log(line);
+                    //Debug.Log(line);
                 }
             }
             return true;
@@ -75,12 +68,28 @@ public class ChessSolver : MonoBehaviour
 
     private void PopulateBoards(string boardInfo)
     {
+        //Debug.Log(boardInfo);
         char[] boardInfoChar = boardInfo.ToCharArray();
+
+        string s = "";
+        foreach (char c in boardInfoChar)
+        {
+            if (c == 'p' || c == 'P' || c == 'b' || c == 'B' || c == 'n' || c == 'N' || c == 'r' || c == 'R' || c == 'q' || c == 'Q' || c == 'k' || c == 'K' || c == '.')
+            {
+                s += c;
+            }
+            
+        }
+
+        debug = s.ToCharArray();
+
+        Debug.Log(s.ToCharArray().Length + "LENGTH");
         for (int i = 0; i < BOARDLENGTH; i++)
         {
             for (int j = 0; j < BOARDLENGTH; j++)
             {
-                board[i,j] = CharToChessPiece(boardInfoChar[i + j], new Vector2Int(i, j));
+                Debug.Log(boardInfoChar[i + j]);
+                board[i,j] = CharToChessPiece(s.ToCharArray()[(8*i)+j], new Vector2Int(i, j));
                 Debug.Log(board[i, j]);
             }
         }
@@ -90,12 +99,26 @@ public class ChessSolver : MonoBehaviour
             for (int j = 0; j < BOARDLENGTH; j++)
             {
                 threatBoard[i, j] = new ChessThreat(new Vector2Int(i, j));
+            }
+        }
+
+
+
+        for (int i = 0; i < BOARDLENGTH; i++)
+        {
+            for (int j = 0; j < BOARDLENGTH; j++)
+            {
                 if (board[i, j].chessPieceType != ChessPieceType.none)
                 {
                     CalculateThreatSpaces(board[i, j]);
                 }
             }
         }
+
+        if (Check(ChessPieceTeam.black)) { Debug.Log("Black is in Check"); }
+        else if (Check(ChessPieceTeam.white)) { Debug.Log("White is in Check"); }
+        else { Debug.Log("No one is in Check"); }
+
     }
 
     private ChessPiece CharToChessPiece(char chessChar, Vector2Int location)
@@ -249,12 +272,14 @@ public class ChessSolver : MonoBehaviour
     {
         if (team == ChessPieceTeam.black)
         {
+            Debug.Log("Black");
             for (int i = 0; i < BOARDLENGTH; i++)
             {
                 for (int j = 0; j < BOARDLENGTH; j++)
                 {
                     if (board[i, j].chessPieceType == ChessPieceType.king && board[i, j].team == ChessPieceTeam.black)
                     {
+                        Debug.Log($"King is at ({i}, {j})");
                         if (threatBoard[i, j].IsLocationThreatened(ChessPieceTeam.black))
                         {
                             return true;
@@ -266,12 +291,16 @@ public class ChessSolver : MonoBehaviour
         }
         else if (team == ChessPieceTeam.white)
         {
+            Debug.Log("White");
             for (int i = 0; i < BOARDLENGTH; i++)
             {
                 for (int j = 0; j < BOARDLENGTH; j++)
                 {
                     if (board[i, j].chessPieceType == ChessPieceType.king && board[i, j].team == ChessPieceTeam.white)
                     {
+                        Debug.Log($"King is at ({i}, {j})");
+                        Debug.Log($"Threat spot is ({threatBoard[i, j].chessPieces.Count})");
+
                         if (threatBoard[i, j].IsLocationThreatened(ChessPieceTeam.white))
                         {
                             return true;
@@ -284,10 +313,10 @@ public class ChessSolver : MonoBehaviour
         return false;
     }
 
-    public bool CheckMate()
-    {
+    //public bool CheckMate()
+    //{
 
-    }
+    //}
 
     public void LineHelper(Vector2Int temp, ChessPiece chessPiece, Vector2Int diagonalValue, List<Vector2Int> threatLocations)
     {
