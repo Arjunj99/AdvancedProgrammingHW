@@ -8,6 +8,10 @@ public class ChessSolver : MonoBehaviour
 {
     public const int BOARDLENGTH = 8;
     public readonly Vector2Int[] PAWNTHREAT = { new Vector2Int(1, 1), new Vector2Int(1, -1) };
+    public readonly Vector2Int[] KNIGHTTHREAT = { new Vector2Int(2, 1), new Vector2Int(2, -1), new Vector2Int(1, 2), new Vector2Int(1, -2), new Vector2Int(-2, 1), new Vector2Int(-2, -1), new Vector2Int(-1, 2), new Vector2Int(-1, -2) };
+    public readonly Vector2Int[] KINGTHREAT = { new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1), new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, -1) };
+
+
     //public readonly Vector2Int[] PAWNTHREAT = { new Vector2Int(1, 1), new Vector2Int(1, -1) };
 
     //public readonly Vector2Int[] PAWNTHREAT = { new Vector2Int(1, 1), new Vector2Int(1, -1) };
@@ -66,10 +70,10 @@ public class ChessSolver : MonoBehaviour
         string trueFilePath = Application.streamingAssetsPath + "\\" + filePath;
 
         string text = File.ReadAllText(trueFilePath);
-        PopulateBoard(text);
+        PopulateBoards(text);
     }
 
-    private void PopulateBoard(string boardInfo)
+    private void PopulateBoards(string boardInfo)
     {
         char[] boardInfoChar = boardInfo.ToCharArray();
         for (int i = 0; i < BOARDLENGTH; i++)
@@ -78,6 +82,18 @@ public class ChessSolver : MonoBehaviour
             {
                 board[i,j] = CharToChessPiece(boardInfoChar[i + j], new Vector2Int(i, j));
                 Debug.Log(board[i, j]);
+            }
+        }
+
+        for (int i = 0; i < BOARDLENGTH; i++)
+        {
+            for (int j = 0; j < BOARDLENGTH; j++)
+            {
+                threatBoard[i, j] = new ChessThreat(new Vector2Int(i, j));
+                if (board[i, j].chessPieceType != ChessPieceType.none)
+                {
+                    CalculateThreatSpaces(board[i, j]);
+                }
             }
         }
     }
@@ -115,86 +131,157 @@ public class ChessSolver : MonoBehaviour
         }
     }
 
-    public Vector2Int[] GetAllNextMoves(int length, int width)
-    {
-        ChessPiece chessPiece = board[length, width];
-        List<Vector2Int> possibleLocations = new List<Vector2Int>();
-        switch (chessPiece.chessPieceType)
-        {
-            case (ChessPieceType.pawn):
-                if (chessPiece.team == ChessPieceTeam.white)
-                {
-                    if (length + 1 < 8 && board[length + 1, width].chessPieceType == ChessPieceType.none)
-                    {
-                        possibleLocations.Add(new Vector2Int(length + 1, width));
-                    }
-                }
-                else
-                {
-                    if (length - 1 > 0 && board[length - 1, width].chessPieceType == ChessPieceType.none)
-                    {
-                        possibleLocations.Add(new Vector2Int(length - 1, width));
-                    }
-                }
-                break;
-        }
+    //public Vector2Int[] GetAllNextMoves(int length, int width)
+    //{
+    //    ChessPiece chessPiece = board[length, width];
+    //    List<Vector2Int> possibleLocations = new List<Vector2Int>();
+    //    switch (chessPiece.chessPieceType)
+    //    {
+    //        case (ChessPieceType.pawn):
+    //            if (chessPiece.team == ChessPieceTeam.white)
+    //            {
+    //                if (length + 1 < 8 && board[length + 1, width].chessPieceType == ChessPieceType.none)
+    //                {
+    //                    possibleLocations.Add(new Vector2Int(length + 1, width));
+    //                }
+    //            }
+    //            else
+    //            {
+    //                if (length - 1 > 0 && board[length - 1, width].chessPieceType == ChessPieceType.none)
+    //                {
+    //                    possibleLocations.Add(new Vector2Int(length - 1, width));
+    //                }
+    //            }
+    //            break;
+    //    }
             
-    }
+    //}
 
-    public Vector2Int[] GetAllNextMoves(int length, int width)
+    //public Vector2Int[] GetAllNextMoves(int length, int width)
+    //{
+    //    ChessPiece chessPiece = board[length, width];
+    //    List<Vector2Int> possibleLocations = new List<Vector2Int>();
+    //    switch (chessPiece.chessPieceType)
+    //    {
+    //        case (ChessPieceType.pawn):
+    //            if (chessPiece.team == ChessPieceTeam.white)
+    //            {
+    //                if (length + 1 < 8 && board[length + 1, width].chessPieceType == ChessPieceType.none)
+    //                {
+    //                    possibleLocations.Add(new Vector2Int(length + 1, width));
+    //                }
+    //            }
+    //            else
+    //            {
+    //                if (length - 1 > 0 && board[length - 1, width].chessPieceType == ChessPieceType.none)
+    //                {
+    //                    possibleLocations.Add(new Vector2Int(length - 1, width));
+    //                }
+    //            }
+    //            break;
+    //    }
+
+    //}
+
+    public void CalculateThreatSpaces(ChessPiece chessPiece)
     {
-        ChessPiece chessPiece = board[length, width];
-        List<Vector2Int> possibleLocations = new List<Vector2Int>();
+        List<Vector2Int> threatLocations = new List<Vector2Int>();
+        Vector2Int temp = new Vector2Int(-1, -1);
+
         switch (chessPiece.chessPieceType)
         {
             case (ChessPieceType.pawn):
-                if (chessPiece.team == ChessPieceTeam.white)
-                {
-                    if (length + 1 < 8 && board[length + 1, width].chessPieceType == ChessPieceType.none)
-                    {
-                        possibleLocations.Add(new Vector2Int(length + 1, width));
-                    }
-                }
-                else
-                {
-                    if (length - 1 > 0 && board[length - 1, width].chessPieceType == ChessPieceType.none)
-                    {
-                        possibleLocations.Add(new Vector2Int(length - 1, width));
-                    }
-                }
-                break;
-        }
-
-    }
-
-    public List<ChessThreat> CalculateThreatSpaces(ChessPiece chessPiece)
-    {
-        switch (chessPiece.chessPieceType)
-        {
-            case (ChessPieceType.pawn):
-                List<Vector2Int> threatLocations = new List<Vector2Int>();
-                Vector2Int temp = new Vector2Int(-1, -1);
                 foreach (Vector2Int threat in PAWNTHREAT)
                 {
                     if (chessPiece.team == ChessPieceTeam.black) { temp = chessPiece.location + threat; }
                     else if (chessPiece.team == ChessPieceTeam.white) { temp = -chessPiece.location + threat; }
                         
-                    if (IsLocationValid(temp)) { threatLocations.Add(temp); }
+                    if (IsAttackLocationValid(temp, chessPiece)) { threatLocations.Add(temp); }
                 }
-                if (chessPiece.team == ChessPieceTeam.black)
+                break;
+            case (ChessPieceType.bishop):
+                LineHelper(temp, chessPiece, new Vector2Int(1, 1), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(-1, 1), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(1, -1), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(-1, -1), threatLocations);
+                break;
+            case (ChessPieceType.knight):
+                foreach (Vector2Int threat in KNIGHTTHREAT)
                 {
+                    temp = chessPiece.location + threat;
 
-                    
+                    if (IsAttackLocationValid(temp, chessPiece)) { threatLocations.Add(temp); }
+                }
+                break;
+            case (ChessPieceType.rook):
+                LineHelper(temp, chessPiece, new Vector2Int(0, 1), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(0, -1), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(1, 0), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(-1, 0), threatLocations);
+                break;
+            case (ChessPieceType.queen):
+                LineHelper(temp, chessPiece, new Vector2Int(1, 1), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(-1, 1), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(1, -1), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(-1, -1), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(0, 1), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(0, -1), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(1, 0), threatLocations);
+                LineHelper(temp, chessPiece, new Vector2Int(-1, 0), threatLocations);
+                break;
+            case (ChessPieceType.king):
+                foreach (Vector2Int threat in KINGTHREAT)
+                {
+                    temp = chessPiece.location + threat;
 
-
+                    if (IsAttackLocationValid(temp, chessPiece)) { threatLocations.Add(temp); }
                 }
                 break;
         }
+
+        foreach (Vector2Int threat in threatLocations)
+        {
+            threatBoard[threat.x, threat.y].AddPiece(chessPiece);
+        }
     }
 
-    public bool Check()
+    public bool Check(ChessPieceTeam team)
     {
-
+        if (team == ChessPieceTeam.black)
+        {
+            for (int i = 0; i < BOARDLENGTH; i++)
+            {
+                for (int j = 0; j < BOARDLENGTH; j++)
+                {
+                    if (board[i, j].chessPieceType == ChessPieceType.king && board[i, j].team == ChessPieceTeam.black)
+                    {
+                        if (threatBoard[i, j].IsLocationThreatened(ChessPieceTeam.black))
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            }
+        }
+        else if (team == ChessPieceTeam.white)
+        {
+            for (int i = 0; i < BOARDLENGTH; i++)
+            {
+                for (int j = 0; j < BOARDLENGTH; j++)
+                {
+                    if (board[i, j].chessPieceType == ChessPieceType.king && board[i, j].team == ChessPieceTeam.white)
+                    {
+                        if (threatBoard[i, j].IsLocationThreatened(ChessPieceTeam.white))
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public bool CheckMate()
@@ -202,9 +289,21 @@ public class ChessSolver : MonoBehaviour
 
     }
 
-    public bool IsLocationValid(Vector2Int location)
+    public void LineHelper(Vector2Int temp, ChessPiece chessPiece, Vector2Int diagonalValue, List<Vector2Int> threatLocations)
     {
-        if (location.x < 8 && location.x >= 0 && location.y < 8 && location.y > 0 && board[location.x, location.y].chessPieceType == ChessPieceType.none)
+        bool stopOnHit = false;
+        temp = chessPiece.location;
+        while (IsAttackLocationValid(temp + diagonalValue, chessPiece) && !stopOnHit)
+        {
+            threatLocations.Add(temp);
+            if (board[temp.x, temp.y].chessPieceType != ChessPieceType.none) { stopOnHit = true; }
+            temp += diagonalValue;
+        }
+    }
+
+    public bool IsAttackLocationValid(Vector2Int location, ChessPiece chessPiece)
+    {
+        if (location.x < 8 && location.x >= 0 && location.y < 8 && location.y > 0 && board[location.x, location.y].team != chessPiece.team)
         {
             return true;
         }
@@ -263,10 +362,22 @@ public struct ChessThreat
     public List<ChessPiece> chessPieces;
     public Vector2Int location;
 
+    public ChessThreat(Vector2Int location)
+    {
+        this.chessPieces = new List<ChessPiece>();
+        this.location = location;
+    }
+
     public ChessThreat(List<ChessPiece> chessPieces, Vector2Int location)
     {
         this.chessPieces = chessPieces;
         this.location = location;
+    }
+
+    public bool AddPiece(ChessPiece chessPiece)
+    {
+        chessPieces.Add(chessPiece);
+        return true;
     }
 
     public bool IsLocationThreatened(ChessSolver.ChessPieceTeam chessPieceTeam)
