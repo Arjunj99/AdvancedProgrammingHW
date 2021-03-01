@@ -172,12 +172,19 @@ public class ChessSolver : MonoBehaviour
         switch (chessPiece.chessPieceType)
         {
             case (ChessPieceType.pawn):
+                List<Vector2Int> threatLocations = new List<Vector2Int>();
+                Vector2Int temp = new Vector2Int(-1, -1);
+                foreach (Vector2Int threat in PAWNTHREAT)
+                {
+                    if (chessPiece.team == ChessPieceTeam.black) { temp = chessPiece.location + threat; }
+                    else if (chessPiece.team == ChessPieceTeam.white) { temp = -chessPiece.location + threat; }
+                        
+                    if (IsLocationValid(temp)) { threatLocations.Add(temp); }
+                }
                 if (chessPiece.team == ChessPieceTeam.black)
                 {
-                    List<Vector2Int> threatLocations = new List<Vector2Int>();
-                    Vector2Int temp;
-                    temp = chessPiece.location + new Vector2Int(1, 1);
-                    if (IsLocationValid(temp)) { threatLocations.Add(temp); }
+
+                    
 
 
                 }
